@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Weather Data</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .weather-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .weather-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .weather-item label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .weather-item span {
+      font-size: 1.2em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <h1>Live Weather Data</h1>
+    <div id="weather-data">
+      <div class="weather-item">
+        <label>Temperature:</label>
+        <span id="temperature"></span> °C
+      </div>
+      <div class="weather-item">
+        <label>Humidity:</label>
+        <span id="humidity"></span> %
+      </div>
+      <div class="weather-item">
+        <label>AQI:</label>
+        <span id="aqi"></span>
+      </div>
+      <div class="weather-item">
+        <label>Precipitation:</label>
+        <span id="precipitation"></span> %
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function fetchData() {
+      fetch('https://script.googleusercontent.com/macros/echo?user_content_key=Uf-hgjlin3HBIJFz2JGrZEWH5eedPobEgTZ6PpWtkin9wv7mFY32qW4DEDu3DvIeSavszZj_FR3evtI5VASkv37V_WCfihsrm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnIp1DA6n6vhUfLLtAqnhtE0DxaSKnONjQhMAeyeRw7OJ0vHvm0LoDqEFq6JCW88tIv8qFXtLOWXIxzq-x7VaUvS8dK26a3RzOg&lib=MBnmN21X4LeMMv_kHhi9Ff1i2sku0-IeN') 
+        .then(response => response.text())
+        .then(data => {
+          const values = data.split(","); 
+          document.getElementById('temperature').textContent = values[0];
+          document.getElementById('humidity').textContent = values[1];
+          document.getElementById('aqi').textContent = values[2];
+          document.getElementById('precipitation').textContent = values[3];
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          document.getElementById('weather-data').innerHTML = 'Error fetching data.';
+        });
+    }
+
+    // Initial fetch
+    fetchData();
+
+    // Set up interval for regular updates
+    setInterval(fetchData, 1000); // Update every second
+  </script>
+</body>
+</html>
